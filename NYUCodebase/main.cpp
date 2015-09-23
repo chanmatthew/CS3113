@@ -33,33 +33,6 @@ GLuint LoadTexture(const char *image_path) {
     return textureID;
 }
 
-void DrawSprite(GLint textureID, float x, float y, float xscale, float yscale, float rotation) {
-    float vertices[] = {0.0f, 0.0f, 1.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, -1.0f, 0.0f, -1.0f};
-    float texCoords[] = {0.0f, 0.0f, 0.5f, 0.0f, 0.5f, 0.5f, 0.0f, 0.0f, 0.5f, 0.5f, 0.0f, 0.5f};
- 
-    glLoadIdentity();
-    glEnable(GL_TEXTURE_2D);
-    
-    glTranslatef(x, y, 0.0f);
-    glScalef(xscale, yscale, 1.0f);
-    glRotatef(rotation, 0.0f, 0.0f, 1.0f);
-    
-    glVertexPointer(2, GL_FLOAT, 0, texCoords);
-    glEnableClientState(GL_VERTEX_ARRAY);
-    
-    glTexCoordPointer(2, GL_FLOAT, 0, vertices);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-    
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    
-    glBindTexture(GL_TEXTURE_2D, textureID);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-    
-    glDisable(GL_TEXTURE_2D);
-}
-
-
 int main(int argc, char *argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
     displayWindow = SDL_CreateWindow("My Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 360, SDL_WINDOW_OPENGL);
@@ -71,26 +44,26 @@ int main(int argc, char *argv[]) {
     
     glViewport(0, 0, 640, 360);
     
-    SDL_Event event;
-    bool done = false;
+    Matrix modelMatrix;
+    Matrix viewMatrix;
+    Matrix projectionMatrix;
     
-    GLuint medal7 = LoadTexture(RESOURCE_FOLDER"flat_medal7.png");
-    GLuint medal8 = LoadTexture(RESOURCE_FOLDER"flat_medal8.png");
-    GLuint medal9 = LoadTexture(RESOURCE_FOLDER"flat_medal9.png");
+    projectionMatrix.setOrthoProjection(-3.55, 3.55, -2.0, 2.0, -1.0, 1.0);
     
     ShaderProgram program = ShaderProgram(RESOURCE_FOLDER"vertex_textured.glsl", RESOURCE_FOLDER"fragment_textured.glsl");
     
-    Matrix projectionMatrix;
-    Matrix modelMatrix;
-    Matrix viewMatrix;
+    GLuint player1 = LoadTexture(RESOURCE_FOLDER"p1_front.png");
+    GLuint player2 = LoadTexture(RESOURCE_FOLDER"p2_front.png");
+    GLuint player3 = LoadTexture(RESOURCE_FOLDER"p3_front.png");
     
-    projectionMatrix.setOrthoProjection(-3.55f, 3.55f, -2.0f, 2.0f, -1.0f, 1.0f);
-
-    glClearColor(0.4f, 0.2f, 0.4f, 1.0f);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
     float lastFrameTicks = 0.0f;
     float angle = 0.0f;
     
+    SDL_Event event;
+    bool done = false;
     while (!done) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
@@ -98,16 +71,84 @@ int main(int argc, char *argv[]) {
             }
         }
         
-        glClear(GL_COLOR_BUFFER_BIT);
-        
         float ticks = (float)SDL_GetTicks()/1000.0f;
         float elapsed = ticks - lastFrameTicks;
         lastFrameTicks = ticks;
-        
+            
         angle += elapsed;
-        DrawSprite(medal7, -0.75f, 0.0f, 1.0f, 1.0f, angle);
-        DrawSprite(medal8, -0.25f, 0.0f, 1.0f, 1.0f, angle);
-        DrawSprite(medal9, 0.25f, 0.0f, 1.0f, 1.0f, angle);
+        
+        glClearColor(0.4f, 0.2f, 0.4f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        
+// player 2 sprite
+        
+        modelMatrix.identity();
+        modelMatrix.Rotate(angle);
+        modelMatrix.Scale(3.0f, 3.0f, 1.0f);
+        
+        program.setModelMatrix(modelMatrix);
+        program.setProjectionMatrix(projectionMatrix);
+        program.setViewMatrix(viewMatrix);
+        
+        glUseProgram(program.programID);
+        
+        float vertices[] = {-0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f, 0.5f, 0.5f,  -0.5f, -0.5f, 0.5f, -0.5f};
+        glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
+        glEnableVertexAttribArray(program.positionAttribute);
+        
+        float texCoords[] = {0.0, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0};
+        glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0, texCoords);
+        glEnableVertexAttribArray(program.texCoordAttribute);
+        
+        glBindTexture(GL_TEXTURE_2D, player2);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        
+        glDisableVertexAttribArray(program.positionAttribute);
+        glDisableVertexAttribArray(program.texCoordAttribute);
+        
+// player 3 sprite
+        
+        modelMatrix.identity();
+        modelMatrix.Translate(2.0f, 0.0f, 0.0f);
+        
+        program.setModelMatrix(modelMatrix);
+        
+        float vertices2[] = {-0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f, 0.5f, 0.5f,  -0.5f, -0.5f, 0.5f, -0.5f};
+        glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertices2);
+        glEnableVertexAttribArray(program.positionAttribute);
+        
+        float texCoords2[] = {0.0, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0};
+        glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0, texCoords2);
+        glEnableVertexAttribArray(program.texCoordAttribute);
+        
+        glBindTexture(GL_TEXTURE_2D, player3);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        
+        glDisableVertexAttribArray(program.positionAttribute);
+        glDisableVertexAttribArray(program.texCoordAttribute);
+        
+//player 1 sprite
+        
+        modelMatrix.identity();
+        modelMatrix.Translate(-2.0f, 0.0f, 0.0f);
+        
+        program.setModelMatrix(modelMatrix);
+        
+        float vertices3[] = {-0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f, 0.5f, 0.5f,  -0.5f, -0.5f, 0.5f, -0.5f};
+        glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertices3);
+        glEnableVertexAttribArray(program.positionAttribute);
+        
+        float texCoords3[] = {0.0, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0};
+        glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0, texCoords3);
+        glEnableVertexAttribArray(program.texCoordAttribute);
+        
+        glBindTexture(GL_TEXTURE_2D, player1);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        
+        glDisableVertexAttribArray(program.positionAttribute);
+        glDisableVertexAttribArray(program.texCoordAttribute);
+        
+        //
         
         SDL_GL_SwapWindow(displayWindow);
     }
