@@ -1,0 +1,22 @@
+<TextureAtlas imagePath="sprites.png">
+	<SubTexture name="coins_01.png" x="54" y="54" width="1" height="1"/>
+	<SubTexture name="coins_02.png" x="54" y="54" width="1" height="1"/>
+	<SubTexture name="coins_03.png" x="54" y="36" width="16" height="16"/>
+	<SubTexture name="coins_04.png" x="54" y="18" width="16" height="16"/>
+	<SubTexture name="coins_05.png" x="54" y="0" width="16" height="16"/>
+	<SubTexture name="coins_06.png" x="36" y="72" width="16" height="16"/>
+	<SubTexture name="coins_07.png" x="36" y="54" width="16" height="16"/>
+	<SubTexture name="coins_08.png" x="36" y="36" width="16" height="16"/>
+	<SubTexture name="coins_09.png" x="36" y="18" width="16" height="16"/>
+	<SubTexture name="coins_10.png" x="36" y="0" width="16" height="16"/>
+	<SubTexture name="coins_11.png" x="18" y="72" width="16" height="16"/>
+	<SubTexture name="coins_12.png" x="18" y="54" width="16" height="16"/>
+	<SubTexture name="coins_13.png" x="18" y="36" width="16" height="16"/>
+	<SubTexture name="coins_14.png" x="18" y="18" width="16" height="16"/>
+	<SubTexture name="coins_15.png" x="18" y="0" width="16" height="16"/>
+	<SubTexture name="coins_16.png" x="0" y="72" width="16" height="16"/>
+	<SubTexture name="coins_17.png" x="0" y="54" width="16" height="16"/>
+	<SubTexture name="coins_18.png" x="0" y="36" width="16" height="16"/>
+	<SubTexture name="coins_19.png" x="0" y="18" width="16" height="16"/>
+	<SubTexture name="coins_20.png" x="0" y="0" width="16" height="16"/>
+</TextureAtlas>

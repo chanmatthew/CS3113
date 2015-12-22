@@ -1,0 +1,14 @@
+<TextureAtlas imagePath="sprites.png">
+	<SubTexture name="money_01.png" x="18" y="18" width="16" height="16"/>
+	<SubTexture name="money_02.png" x="36" y="18" width="16" height="16"/>
+	<SubTexture name="money_03.png" x="36" y="0" width="16" height="16"/>
+	<SubTexture name="money_04.png" x="18" y="54" width="16" height="16"/>
+	<SubTexture name="money_05.png" x="36" y="36" width="1" height="1"/>
+	<SubTexture name="money_06.png" x="18" y="36" width="16" height="16"/>
+	<SubTexture name="money_07.png" x="18" y="0" width="16" height="16"/>
+	<SubTexture name="money_08.png" x="0" y="54" width="16" height="16"/>
+	<SubTexture name="money_09.png" x="36" y="36" width="1" height="1"/>
+	<SubTexture name="money_10.png" x="0" y="36" width="16" height="16"/>
+	<SubTexture name="money_11.png" x="0" y="18" width="16" height="16"/>
+	<SubTexture name="money_12.png" x="0" y="0" width="16" height="16"/>
+</TextureAtlas>
